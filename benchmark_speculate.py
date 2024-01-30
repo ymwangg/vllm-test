@@ -45,11 +45,14 @@ class BenchmarkConfig:
 
         # Add command-line arguments
         parser.add_argument('--use-speculate',
-                            default='store_true',
+                            action='store_true',
                             help='Use speculative decoding')
         parser.add_argument('--enforce-eager',
-                            default='store_true',
+                            action='store_true',
                             help="Use cudagraph")
+        parser.add_argument('--run-human-eval',
+                            action="store_true",
+                            help="Run human_eval benchmark")
         parser.add_argument('--model',
                             type=str,
                             default="codellama/CodeLlama-7b-Python-hf",
@@ -111,9 +114,7 @@ class BenchmarkConfig:
                             type=int,
                             default=5,
                             help='Speculate length')
-        parser.add_argument('--run-human-eval',
-                            action="store_true",
-                            help="Run human_eval benchmark")
+
 
         # Parse the command-line arguments and create an instance of BenchmarkConfig
         args = parser.parse_args()
