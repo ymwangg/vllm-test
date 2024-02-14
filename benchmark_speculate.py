@@ -218,7 +218,7 @@ def main(args: BenchmarkConfig):
         # To reproduce top@1 = 0.53 for CodeLlama34B-Python, run the following:
         #
         # python benchmark_speculate.py --batch-size 32 --run-human-eval --tp-size 8 \
-        # --model codellama/CodeLlama-34b-Python-hf --use-speculate True --max-tokens 512 \
+        # --model codellama/CodeLlama-34b-Python-hf --use-speculate --max-tokens 512 \
         # --temperature 0.0 --frequency-penalty 0.1
         import os
         from human_eval.data import write_jsonl
