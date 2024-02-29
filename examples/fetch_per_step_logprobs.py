@@ -36,6 +36,7 @@ while llm.llm_engine.has_unfinished_requests():
         seq_output = output.outputs[0]
         if request_id not in request_cache:
             request_cache[request_id]['output_len'] = 0
+            request_cache[request_id]['cum_logprob'] = 0
         prev_len = request_cache[request_id]['output_len']
         cur_len = len(seq_output.token_ids)
         request_cache[request_id]['output_len'] = cur_len
@@ -45,6 +46,11 @@ while llm.llm_engine.has_unfinished_requests():
             logprobs[token_id]
             for token_id, logprobs in zip(new_token_ids, new_logprobs_list)
         ]
+        prev_cum_logprob = request_cache[request_id]['cum_logprob']
+        cur_cum_logprob = seq_output.cumulative_logprob
+        request_cache[request_id]['cum_logprob'] = cur_cum_logprob
+        delta_cum_logprobs = cur_cum_logprob - prev_cum_logprob
+        assert delta_cum_logprobs == sum(new_logprobs)
         print("-" * 100)
         print(f"request_id={request_id}, response=",
               list(zip(new_token_ids, new_logprobs)))
