@@ -34,6 +34,7 @@ class BenchmarkConfig:
     draft_tp_size: int
     max_tokens: int
     speculate_length: int
+    block_size: int
 
     # human_eval
     run_human_eval: bool
@@ -114,7 +115,10 @@ class BenchmarkConfig:
                             type=int,
                             default=5,
                             help='Speculate length')
-
+        parser.add_argument('--block-size',
+                            type=int,
+                            default=16,
+                            help='Block size')
 
         # Parse the command-line arguments and create an instance of BenchmarkConfig
         args = parser.parse_args()
@@ -139,7 +143,8 @@ def main(args: BenchmarkConfig):
     offset = 0
     bs = args.batch_size
     while True:
-        if args.max_steps >= 0 and step >= args.max_steps:
+        if offset >= len(dataset) or (args.max_steps >= 0
+                                      and step >= args.max_steps):
             break
         prompt = [item['prompt'] for item in dataset[offset:offset + bs]]
         prompts_list.append(prompt)
@@ -154,6 +159,7 @@ def main(args: BenchmarkConfig):
         "enforce_eager": args.enforce_eager,
         "gpu_memory_utilization": args.gpu_memory_utilization,
         "quantization": args.quantization,
+        "block_size": args.block_size,
     }
     if args.use_speculate:
         engine_kwargs.update({
@@ -177,7 +183,8 @@ def main(args: BenchmarkConfig):
         outputs = llm.generate(prompts, sampling_params)
         outputs_list.append(outputs)
         t3 = time.monotonic()
-        print(f"batch_{step} done in {t3-t2} seconds")
+        num_tokens = sum(len(output.outputs[0].token_ids) for output in outputs)
+        print(f"batch_{step} throutput={num_tokens/(t3-t2)} tokens/sec")
     t1 = time.monotonic()
 
     prompt_lens = []

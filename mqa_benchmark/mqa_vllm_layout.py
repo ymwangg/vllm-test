@@ -167,4 +167,3 @@ def mqa_vllm_layout(
         scale,
         num_queries_per_kv,
     )
-

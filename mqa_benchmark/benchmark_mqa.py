@@ -32,18 +32,14 @@ def prepare_kv_cache(num_blocks: int,
     if key_style == "vllm":
         x = 8
         key_shape = [num_blocks, num_kv_heads, head_size // x, block_size, x]
-    elif key_style == "head_first":
-        key_shape = [num_blocks, num_kv_heads, block_size, head_size]
-    elif key_style == "block_first":
+    elif key_style == "flash":
         key_shape = [num_blocks, block_size, num_kv_heads, head_size]
     else:
         raise ValueError("Unknown layout")
     # value cache
     if value_style == "vllm":
         value_shape = [num_blocks, num_kv_heads, head_size, block_size]
-    elif value_style == "head_first":
-        value_shape = [num_blocks, num_kv_heads, block_size, head_size]
-    elif value_style == "block_first":
+    elif value_style == "flash":
         value_shape = [num_blocks, block_size, num_kv_heads, head_size]
     else:
         raise ValueError("Unknown layout")
@@ -391,6 +387,7 @@ def validate(
             block_tables,
             context_lens,
         )
+
     def fn2():
         mqa_flash_layout(
             output,
@@ -423,6 +420,68 @@ def validate(
     print(benchmark(fn1), benchmark(fn2), benchmark(fn3))
 
 
+def validate2(
+    batch_size: int = 16,
+    seq_len: int = 6,
+    head_size: int = 128,
+    num_query_heads: int = 8,
+    num_kv_heads: int = 8,
+    block_size: int = 256,
+    max_ctx_len: int = 512,
+    block_style: str = "flash",
+    fn_name: str = "flash",
+):
+    num_blocks = cdiv(max_ctx_len * batch_size, block_size)
+    key_cache, value_cache = prepare_kv_cache(num_blocks, block_size,
+                                              num_kv_heads, head_size,
+                                              block_style, block_style)
+    query, context_lens, block_tables = prepare_inputs(
+        batch_size=batch_size,
+        seq_len=seq_len,
+        num_query_heads=num_query_heads,
+        head_size=head_size,
+        max_ctx_len=max_ctx_len,
+        ctx_len_style="random",
+        block_table_style="sequential",
+        block_size=block_size,
+        num_blocks=num_blocks)
+    output = torch.empty_like(query)
+    scale = 1.0 / math.sqrt(head_size)
+
+    def fn1():
+        mqa_flash_layout(
+            output,
+            query.view(-1, num_query_heads, head_size),
+            key_cache,
+            value_cache,
+            num_kv_heads,
+            scale,
+            block_tables,
+            context_lens,
+        )
+
+    def fn2():
+        ref_output = ref_flash_attn_with_kvcache(query, key_cache, value_cache,
+                                                 block_tables.to(torch.int32),
+                                                 context_lens.to(torch.int32))
+
+    if fn_name == "flash":
+        fn = fn2
+    else:
+        fn = fn1
+    n_warm = 2
+    n_steps = 100
+    for _ in range(n_warm):
+        fn()
+    torch.cuda.synchronize()
+    t0 = time.monotonic()
+    for _ in range(n_steps):
+        fn()
+    torch.cuda.synchronize()
+    t1 = time.monotonic()
+    return (t1 - t0) / n_steps
+
+
 if __name__ == "__main__":
     # test_cached_mqa(1, 5, 64, 12, 12)
     # test_cached_mqa(1, 5, 64, 12, 4)
@@ -430,4 +489,19 @@ if __name__ == "__main__":
     # test_cached_mqa(24, 5, 128, 12, 12)
     # test_cached_mqa(24, 16, 128, 4, 1)
     # benchmark()
-    validate(batch_size=4, num_query_heads=8, num_kv_heads=1)
+    for bs in (1, 4, 16):
+        flash_res = validate2(batch_size=bs,
+                              num_query_heads=16,
+                              num_kv_heads=2,
+                              block_size=256,
+                              block_style="flash",
+                              fn_name="flash")
+        triton_res = validate2(batch_size=bs,
+                               num_query_heads=16,
+                               num_kv_heads=2,
+                               block_size=16,
+                               block_style="flash",
+                               fn_name="triton")
+        print(
+            f"bs={bs} flash={flash_res} triton={triton_res} speedup={triton_res/flash_res}"
+        )
