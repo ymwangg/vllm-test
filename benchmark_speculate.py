@@ -92,7 +92,7 @@ class BenchmarkConfig:
                             help='Maximum number of steps')
         parser.add_argument('--dataset',
                             type=str,
-                            default='data/human_eval.json',
+                            default='data/humaneval.json',
                             help='Dataset path')
         parser.add_argument('--output',
                             type=str,
