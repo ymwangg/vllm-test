@@ -221,7 +221,7 @@ class Dataset:
             num_tokens = sum(
                 len(output.outputs[0].token_ids) for output in outputs)
             print(f"batch_{step} throutput={num_tokens/(t3-t2)} tokens/sec")
-        file_name = f"{self.dump_prefix}/BS_1_Temperature_{self.args.temperature}_UseSysPrompt_{self.args.use_system_prompt}.jsonl"
+        file_name = f"{self.dump_prefix}/Single_Temperature_{self.args.temperature}_UseSysPrompt_{self.args.use_system_prompt}.jsonl"
         with open(file_name, 'w') as fh:
             for request_outputs, latency in outputs_list:
                 output = request_outputs[0].outputs[0]
@@ -293,9 +293,9 @@ def main(args: BenchmarkConfig):
 
     data = Dataset(args.dataset, llm, sampling_params, args)
     # outputs, dt = data.benchmark(32, 3, llm, sampling_params)
-    # data.benchmark_single(max_steps=100)
-    for batch_size in [1, 4, 8, 16, 32, 64]:
-        data.benchmark_bs(batch_size, max_steps=100)
+    data.benchmark_single(max_steps=100)
+    # for batch_size in [1, 4, 8, 16, 32, 64]:
+    #     data.benchmark_bs(batch_size, max_steps=100)
 
 
 if __name__ == "__main__":

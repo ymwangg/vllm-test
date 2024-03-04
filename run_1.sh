@@ -11,11 +11,11 @@ for ((i=0; i<${#target_names[@]}; i++)); do
     tp=${tp_sizes[$i]}
     echo "Running $target"
     # none speculate case
-    python benchmark.py --tp-size $tp --model $target --dataset $dataset --output-dir $output_dir --max-tokens 512 --temperature 0.0 --top-p 1.0 --frequency-penalty 0.0 --block-size 16 --use-system-prompt
+    python benchmark.py --tp-size $tp --model $target --dataset $dataset --output-dir $output_dir --max-tokens 512 --temperature 0.0 --top-p 1.0 --frequency-penalty 0.0 --block-size 16
     for ((j=0; j<${#draft_names[@]}; j++)); do
         draft_name=${draft_names[$j]}
         draft=/home/ubuntu/models/$draft_name
         echo "Running $target $draft"
-        python benchmark.py --tp-size $tp --model $target --draft-model $draft --dataset $dataset --output-dir $output_dir --max-tokens 512 --temperature 0.0 --top-p 1.0 --frequency-penalty 0.0 --block-size 16 --use-system-prompt --use-speculate 
+        python benchmark.py --tp-size $tp --model $target --draft-model $draft --dataset $dataset --output-dir $output_dir --max-tokens 512 --temperature 0.0 --top-p 1.0 --frequency-penalty 0.0 --block-size 16 --use-speculate 
     done
 done
