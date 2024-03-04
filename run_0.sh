@@ -1,9 +1,9 @@
 export CUDA_VISIBLE_DEVICES=0,1,2,3
-tp_sizes=(2)
-target_names=(CodeLlama-34b-Python-hf)
+tp_sizes=(2 4)
+target_names=(CodeLlama-34b-Python-hf CodeLlama-70b-Python-hf)
 draft_names=(Suzuka-73M Suzuka-120M TinyLlama-1.1B-Chat-v1.0)
-dataset="./dataset/mt.jsonl"
-output_dir="./output"
+dataset="./dataset/humaneval.jsonl"
+output_dir="./output_0.3.2"
 
 for ((i=0; i<${#target_names[@]}; i++)); do
     target_name=${target_names[$i]}

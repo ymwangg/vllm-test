@@ -293,9 +293,9 @@ def main(args: BenchmarkConfig):
 
     data = Dataset(args.dataset, llm, sampling_params, args)
 
-    data.benchmark_single(max_steps=20)
+    data.benchmark_single(max_steps=100)
     for batch_size in [4, 8, 16, 32, 64]:
-        data.benchmark_bs(batch_size, max_steps=20)
+        data.benchmark_bs(batch_size, max_steps=100)
 
 
 if __name__ == "__main__":
