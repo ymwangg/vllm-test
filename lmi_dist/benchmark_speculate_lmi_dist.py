@@ -19,12 +19,12 @@ from lmi_dist.comms import setup_torch_dist
 use_speculate = True
 run_humaneval = True
 dataset_path = "../dataset/humaneval.jsonl"
-batch_size = 1
+batch_size = 32
 max_steps = 512
 output_file_name = "lmi_dist.json"
 temperature = 0.0
 top_p = 1.0
-frequency_penalty = 0.0
+frequency_penalty = 0.1
 max_tokens = 512
 
 local_rank, world_size = setup_torch_dist()
@@ -121,13 +121,14 @@ def main(args):
             prompt_lens.append(prompt_len)
             text_len = len(output.outputs[0].token_ids)
             text_lens.append(text_len)
-            history.append(output.outputs[0].acceptance_history)
-            m = np.mean(history[-1])
+            if use_speculate:
+                history.append(output.outputs[0].acceptance_history)
+                m = np.mean(history[-1])
             token_ids = output.prompt_token_ids + output.outputs[0].token_ids
             records.append({
                 'prompt': prompt,
                 'response': generated_text,
-                'acceptance': m,
+                'acceptance': m if use_speculate else 0,
                 'prompt_len': prompt_len,
                 'response_len': text_len,
                 'token_ids': token_ids
