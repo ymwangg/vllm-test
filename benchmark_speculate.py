@@ -92,7 +92,7 @@ class BenchmarkConfig:
                             help='Maximum number of steps')
         parser.add_argument('--dataset',
                             type=str,
-                            default='data/humaneval.json',
+                            default='dataset/humaneval.jsonl',
                             help='Dataset path')
         parser.add_argument('--output',
                             type=str,
@@ -135,7 +135,7 @@ def main(args: BenchmarkConfig):
 
     # Sample prompts.
     with open(args.dataset) as fh:
-        dataset = json.load(fh)
+        dataset = [json.loads(line) for line in fh.readlines()]
 
     # Prepare batches
     prompts_list = []
@@ -199,13 +199,14 @@ def main(args: BenchmarkConfig):
             prompt_lens.append(prompt_len)
             text_len = len(output.outputs[0].token_ids)
             text_lens.append(text_len)
-            history.append(output.outputs[0].acceptance_history)
-            m = np.mean(history[-1])
+            if args.use_speculate:
+                history.append(output.outputs[0].acceptance_history)
+                m = np.mean(history[-1])
             token_ids = output.prompt_token_ids + output.outputs[0].token_ids
             records.append({
                 'prompt': prompt,
                 'response': generated_text,
-                'acceptance': m,
+                'acceptance': m if args.use_speculate else 0,
                 'prompt_len': prompt_len,
                 'response_len': text_len,
                 'token_ids': token_ids
@@ -221,7 +222,7 @@ def main(args: BenchmarkConfig):
     with open(args.output, 'w') as fh:
         json.dump(records, fh)
 
-    if args.run_human_eval:
+    if args.run_human_eval and args.dataset.endswith("humaneval.jsonl"):
         # To reproduce top@1 = 0.53 for CodeLlama34B-Python, run the following:
         #
         # python benchmark_speculate.py --batch-size 32 --run-human-eval --tp-size 8 \
