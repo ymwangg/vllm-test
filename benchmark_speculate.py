@@ -142,9 +142,8 @@ def main(args: BenchmarkConfig):
     step = 0
     offset = 0
     bs = args.batch_size
-    while True:
-        if offset >= len(dataset) or (args.max_steps >= 0
-                                      and step >= args.max_steps):
+    while offset < len(dataset):
+        if (args.max_steps >= 0 and step >= args.max_steps):
             break
         prompt = [item['prompt'] for item in dataset[offset:offset + bs]]
         prompts_list.append(prompt)
