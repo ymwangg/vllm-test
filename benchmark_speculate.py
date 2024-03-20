@@ -96,7 +96,7 @@ class BenchmarkConfig:
                             help='Dataset path')
         parser.add_argument('--output',
                             type=str,
-                            default='output.json',
+                            default='output.jsonl',
                             help='Output path')
         parser.add_argument('--batch-size',
                             type=int,
@@ -202,6 +202,9 @@ def main(args: BenchmarkConfig):
                 history.append(output.outputs[0].acceptance_history)
                 m = np.mean(history[-1])
             token_ids = output.prompt_token_ids + output.outputs[0].token_ids
+            # Make sure eos is the last token if any.
+            if 2 in token_ids:
+                assert token_ids[-1] == 2
             records.append({
                 'prompt': prompt,
                 'response': generated_text,
@@ -219,7 +222,8 @@ def main(args: BenchmarkConfig):
         avg_accept = np.mean([np.mean(x) for x in history if x])
         print(f"Avg accepted = {avg_accept}")
     with open(args.output, 'w') as fh:
-        json.dump(records, fh)
+        for item in records:
+            fh.write(json.dumps(item) + '\n')
 
     if args.run_human_eval and args.dataset.endswith("humaneval.jsonl"):
         # To reproduce top@1 = 0.53 for CodeLlama34B-Python, run the following:
