@@ -61,7 +61,7 @@ def sample_requests(
     with open(dataset_path) as fh:
         prompts = [json.loads(line)["prompt"] for line in fh.readlines()]
     prompt_token_ids = tokenizer(prompts).input_ids
-    requests = [(prompt, token_ids) for prompt,token_ids in zip(prompts, prompt_token_ids)]
+    requests = [(prompt, len(token_ids), 512) for prompt,token_ids in zip(prompts, prompt_token_ids)]
     # Sample the requests.
     sampled_requests = random.choices(requests, k=num_requests)
     return sampled_requests
@@ -321,13 +321,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num-prompts",
         type=int,
-        default=1000,
+        default=50,
         help="Number of prompts to process.",
     )
     parser.add_argument(
         "--request-rate",
         type=float,
-        default=float("inf"),
+        default=0.5,
         help="Number of requests per second. If this is inf, "
         "then all the requests are sent at time 0. "
         "Otherwise, we use Poisson process to synthesize "
