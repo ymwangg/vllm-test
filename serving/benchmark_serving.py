@@ -51,6 +51,9 @@ class BenchmarkMetrics:
     median_tpot_ms: float
     p99_tpot_ms: float
 
+def apply_template(prompt):
+    template = '[INST]<<SYS>>Please try to provide useful, helpful and actionable answers.<</SYS>>FIXME[/INST]'
+    return template.replace("FIXME", prompt)
 
 def sample_requests(
     dataset_path: str,
@@ -61,7 +64,7 @@ def sample_requests(
     with open(dataset_path) as fh:
         prompts = [json.loads(line)["prompt"] for line in fh.readlines()]
     prompt_token_ids = tokenizer(prompts).input_ids
-    requests = [(prompt, len(token_ids), 512) for prompt,token_ids in zip(prompts, prompt_token_ids)]
+    requests = [(apply_template(prompt), len(token_ids)) for prompt,token_ids in zip(prompts, prompt_token_ids)]
     # Sample the requests.
     sampled_requests = random.choices(requests, k=num_requests)
     return sampled_requests
@@ -98,6 +101,8 @@ def calculate_metrics(
     for i in range(len(outputs)):
         if outputs[i].success:
             output_len = len(tokenizer.encode(outputs[i].generated_text))
+            # print(f"Prompt: {outputs[i].prompt!r}")
+            # print(f"Response: {outputs[i].generated_text!r}")
             total_output += output_len
             total_input += input_requests[i][1]
             per_token_latencies.append(outputs[i].latency / output_len)
@@ -128,10 +133,11 @@ async def benchmark(
     model_id: str,
     tokenizer: PreTrainedTokenizerBase,
     input_requests: List[Tuple[str, int, int]],
-    best_of: int,
-    use_beam_search: bool,
     request_rate: float,
     disable_tqdm: bool,
+    temperature: float,
+    top_p: float,
+    max_tokens: int,
 ):
     if backend in ASYNC_REQUEST_FUNCS:
         request_func = ASYNC_REQUEST_FUNCS.get(backend)
@@ -145,15 +151,15 @@ async def benchmark(
     benchmark_start_time = time.perf_counter()
     tasks = []
     async for request in get_request(input_requests, request_rate):
-        prompt, prompt_len, output_len = request
+        prompt, prompt_len = request
         request_func_input = RequestFuncInput(
             model=model_id,
             prompt=prompt,
             api_url=api_url,
             prompt_len=prompt_len,
-            output_len=output_len,
-            best_of=best_of,
-            use_beam_search=use_beam_search,
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=max_tokens,
         )
         tasks.append(
             asyncio.create_task(
@@ -230,10 +236,11 @@ def main(args: argparse.Namespace):
             model_id=model_id,
             tokenizer=tokenizer,
             input_requests=input_requests,
-            best_of=args.best_of,
-            use_beam_search=args.use_beam_search,
             request_rate=args.request_rate,
             disable_tqdm=args.disable_tqdm,
+            temperature=args.temperature,
+            top_p=args.top_p,
+            max_tokens=args.max_tokens,
         ))
 
     # Save config and results to json
@@ -247,8 +254,6 @@ def main(args: argparse.Namespace):
         result_json["version"] = args.version
         result_json["model_id"] = model_id
         result_json["tokenizer_id"] = tokenizer_id
-        result_json["best_of"] = args.best_of
-        result_json["use_beam_search"] = args.use_beam_search
         result_json["num_prompts"] = args.num_prompts
 
         # Traffic
@@ -311,18 +316,28 @@ if __name__ == "__main__":
         "Name or path of the tokenizer, if not using the default model tokenizer.",
     )
     parser.add_argument(
-        "--best-of",
-        type=int,
-        default=1,
-        help="Generates `best_of` sequences per prompt and "
-        "returns the best one.",
-    )
-    parser.add_argument("--use-beam-search", action="store_true")
-    parser.add_argument(
         "--num-prompts",
         type=int,
         default=50,
         help="Number of prompts to process.",
+    )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.0,
+        help="Temperature.",
+    )
+    parser.add_argument(
+        "--top-p",
+        type=float,
+        default=1.0,
+        help="Top-p.",
+    )
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        default=512,
+        help="Max number of tokens to generate.",
     )
     parser.add_argument(
         "--request-rate",
