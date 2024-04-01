@@ -265,9 +265,11 @@ def main(args: argparse.Namespace):
 
         # Save to file
         base_model_id = model_id.split("/")[-1]
-        file_name = f"{backend}-{args.request_rate}qps-{base_model_id}-{current_dt}.json"
-        with open(file_name, "w") as outfile:
+        # file_name = f"{backend}-{args.request_rate}qps-{base_model_id}-{current_dt}.json"
+        file_name = f"{args.output_name}"
+        with open(file_name, "a+") as outfile:
             json.dump(result_json, outfile)
+            outfile.write("\n")
 
 
 if __name__ == "__main__":
@@ -364,7 +366,12 @@ if __name__ == "__main__":
         action="store_true",
         help="Specify to save benchmark results to a json file",
     )
-
+    parser.add_argument(
+        "--output-name",
+        type=str,
+        default="output.jsonl",
+        help="Specify to save benchmark results to a json file",
+    )
     args = parser.parse_args()
     main(args)
 

@@ -62,10 +62,18 @@ async def async_request_vllm(
                     output.latency = time.perf_counter() - st
 
                     # When streaming, '\0' is appended to the end of the response.
-                    body = data.decode("utf-8").strip("\0")
-                    output.generated_text = json.loads(
-                        body)["text"][0][len(request_func_input.prompt):]
-                    output.success = True
+                    body = data.decode("utf-8").rstrip("\0").split("\0")[-1]
+                    try: 
+                        output.generated_text = json.loads(
+                            body)["text"][0][len(request_func_input.prompt):]
+                        output.success = True
+                    except Exception as e:
+                        with open("debug.jsonl",'a+') as fh:
+                            fh.write(body)
+                            fh.write("\n")
+                        print(e)
+                        print(f"{body!r}")
+                        print(f"{data!r}")
 
                 else:
                     output.success = False
