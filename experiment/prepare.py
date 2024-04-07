@@ -18,7 +18,7 @@ draft_models = [
 temperatures = [0.0]
 
 
-def get_path(model):
+def get_model_path(model):
     prefix = "/home/ubuntu/models/"
     return prefix + model
 
@@ -30,6 +30,7 @@ config = Config(
     config='A',
     model='B',
     draft_model='C',
+    shuffle_data=True,
     dataset="../dataset/humaneval.jsonl",
     use_chat_template=True,
     system_prompt=
@@ -47,13 +48,13 @@ config = Config(
 )
 
 for model in models:
-    config.model = get_path(model)
+    config.model = get_model_path(model)
     if model.startswith("Llama"):
         config.use_chat_template = True
         dataset = "mt.jsonl"
         config.dataset =  get_dataset_path(dataset)
     elif model.startswith("CodeLlama"):
-        config.use_chat_template = True
+        config.use_chat_template = False
         dataset = "humaneval.jsonl"
         config.dataset = get_dataset_path(dataset)
     else:
@@ -77,7 +78,7 @@ for model in models:
             fh.write(config.to_yaml())
         for draft_model in draft_models:
             config.use_speculate = True
-            config.draft_model = draft_model
+            config.draft_model = get_model_path(draft_model)
             config_name = f"{model}_{draft_model}_{dataset}_{t}.yaml"
             with open(config_name, "w") as fh:
                 fh.write(config.to_yaml())

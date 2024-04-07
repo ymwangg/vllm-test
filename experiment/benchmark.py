@@ -8,12 +8,14 @@ import numpy as np
 import argparse
 import os
 import yaml
+import random
 
 from fastchat.model.model_adapter import get_conversation_template
 from dataclasses import dataclass, fields
 from collections import defaultdict
 from typing import List
 
+random.seed(0)
 
 
 @dataclass
@@ -22,6 +24,7 @@ class Config:
     model: str
     draft_model: str
 
+    shuffle_data: bool = False
     dataset: str = "../dataset/humaneval.jsonl"
 
     use_chat_template: bool = True
@@ -79,7 +82,9 @@ class Dataset:
     def reset(self):
         self.index = 0
 
-    def fetch_next(self):
+    def fetch_next(self, shuffle_data=False):
+        if shuffle_data:
+            return random.choice(self.data)
         result = self.data[self.index % len(self.data)]
         self.index += 1
         return result
@@ -100,7 +105,8 @@ class Executor:
         self.outputs = defaultdict(dict)
         config_file_name = config.config.split("/")[-1]
         self.full_output = config_file_name.replace(".yaml", ".full.jsonl")
-        self.summary_output = config_file_name.replace(".yaml", ".summary.jsonl")
+        self.summary_output = config_file_name.replace(".yaml",
+                                                       ".summary.jsonl")
         for fname in [self.full_output, self.summary_output]:
             if os.path.exists(fname):
                 os.remove(fname)
@@ -149,39 +155,47 @@ class Executor:
         record['batch_size'] = batch_size
         if self.config.use_speculate:
             record['mean_accept_length'] = np.mean(response.acceptance_history)
-        print(
-            f"request_id={request_id} batch_size={batch_size} num_tokens={record['num_output_tokens']} mean_tpot_ms={record['mean_tpot_ms']:.2f} mean_throughput={record['mean_throughput']:.2f}"
-        )
+        print(f"request_id={request_id} batch_size={batch_size} "
+              f"num_tokens={record['num_output_tokens']} "
+              f"mean_tpot_ms={record['mean_tpot_ms']:.2f} "
+              f"mean_throughput={record['mean_throughput']:.2f}")
 
-    def profile(self, batch_size=1, repeat_multiplier=1):
-        assert repeat_multiplier > 0
-        max_num_requests = len(self.dataset.data) * repeat_multiplier
+    def profile(self, batch_size=1, time_limit_s=10):
         num_added = 0
         # constant batch size
         t0 = time.time()
         for _ in range(batch_size):
-            next_request = self.dataset.fetch_next()
+            next_request = self.dataset.fetch_next(config.shuffle_data)
             if not next_request:
                 break
             num_added += 1
             self.add_request(next_request)
         llm = self.llm
         llm_engine = llm.llm_engine
-
-        while num_added < max_num_requests or llm_engine.get_num_unfinished_requests(
-        ) > 0:
-            while num_added < max_num_requests and llm_engine.get_num_unfinished_requests(
+        while llm_engine.has_unfinished_requests():
+            dt = time.time() - t0
+            if dt > time_limit_s:
+                break
+            while llm_engine.get_num_unfinished_requests(
             ) < batch_size:
-                next_request = self.dataset.fetch_next()
+                next_request = self.dataset.fetch_next(config.shuffle_data)
                 num_added += 1
                 self.add_request(next_request)
+
             step_outputs = llm.llm_engine.step()
             for output in step_outputs:
+                # Only requests finished within simulation time are recorded
                 if output.finished:
                     self.finish_request(output, batch_size)
-        t1 = time.time()
+        # Finish all unfinished requests
+        for unfinished_requests in llm_engine.scheduler.waiting + llm_engine.scheduler.running:
+            request_id = unfinished_requests.request_id
+            self.outputs.pop(request_id)
+            llm_engine.abort_request(request_id)
+        assert not llm_engine.has_unfinished_requests()
+        assert len(
+            self.outputs) > 0, "Too few requests finished within time limits"
         # dump the results
-        dt = t1 - t0
         records = self.outputs.values()
         total_num_tokens = sum(record['num_output_tokens']
                                for record in records)
@@ -191,10 +205,15 @@ class Executor:
             [record['mean_throughput'] for record in records])
         global_results = {
             "batch_size": batch_size,
+            "num_samples": len(records),
             "global_throughput": global_throughput,
             "mean_tpot_ms": mean_tpot_ms,
             "mean_throughput": mean_throughput,
         }
+        if config.use_speculate:
+            mean_acceptance = np.mean(
+                [record['mean_accept_length'] for record in records])
+            global_results['mean_acceptance'] = mean_acceptance
         with open(self.summary_output, 'a+') as fh:
             fh.write(json.dumps(global_results))
             fh.write("\n")
@@ -211,9 +230,9 @@ class Executor:
 def main(config: Config):
     executor = Executor(config)
     batch_sizes = [1, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128]
-    batch_sizes = [4, 8, 16]
+    time_limit = 5 * 60  # simulate 5 minutes
     for bs in batch_sizes:
-        executor.profile(bs)
+        executor.profile(bs, time_limit_s=time_limit)
 
 
 if __name__ == "__main__":
