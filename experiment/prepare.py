@@ -15,7 +15,19 @@ draft_models = [
     "TinyLlama-1.1B-Chat-v1.0-4k",
 ]
 
-temperatures = [0.0]
+def get_tp_size(model):
+    if "7b" in model.lower():
+        return 1
+    elif "13b" in model.lower():
+        return 1
+    elif "34b" in model.lower():
+        return 2
+    elif "70b" in model.lower():
+        return 4
+    else:
+        raise ValueError("Unknown model size")
+
+temperatures = [0.0, 1.0]
 
 
 def get_model_path(model):
@@ -59,26 +71,18 @@ for model in models:
         config.dataset = get_dataset_path(dataset)
     else:
         raise ValueError("Unknown model")
-    if "7b" in model.lower():
-        config.tp_size = 1
-    elif "13b" in model.lower():
-        config.tp_size = 1
-    elif "34b" in model.lower():
-        config.tp_size = 2
-    elif "70b" in model.lower():
-        config.tp_size = 4
-    else:
-        raise ValueError("Unknown model size")
+    config.tp_size = get_tp_size(model)
     for t in temperatures:
         config.temperature = t
         config.use_speculate = False
         config.draft_model = None
-        config_name = f"{model}_{dataset}_{t}.yaml"
+        dataset_name = dataset.replace(".jsonl", "")
+        config_name = f"{model}_{dataset_name}_{t}.yaml"
         with open(config_name, "w") as fh:
             fh.write(config.to_yaml())
         for draft_model in draft_models:
             config.use_speculate = True
             config.draft_model = get_model_path(draft_model)
-            config_name = f"{model}_{draft_model}_{dataset}_{t}.yaml"
+            config_name = f"{model}_{draft_model}_{dataset_name}_{t}.yaml"
             with open(config_name, "w") as fh:
                 fh.write(config.to_yaml())

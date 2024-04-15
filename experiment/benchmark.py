@@ -121,6 +121,7 @@ class Executor:
             "tensor_parallel_size": config.tp_size,
             "enforce_eager": config.enforce_eager,
             "gpu_memory_utilization": config.gpu_memory_utilization,
+            "trust_remote_code": True,
         }
         if config.use_speculate:
             engine_kwargs.update({
@@ -136,12 +137,14 @@ class Executor:
         t0 = time.time()
         llm._add_request(next_request, self.sampling_params, None)
         request_id = llm_engine.scheduler.waiting[-1].request_id
+        assert request_id not in self.outputs
         record = self.outputs[request_id]
         record['request_id'] = request_id
         record['t0'] = t0
 
     def finish_request(self, output, batch_size):
         request_id = output.request_id
+        assert request_id in self.outputs
         record = self.outputs[request_id]
         response = output.outputs[0]
         record['prompt'] = output.prompt
@@ -160,7 +163,17 @@ class Executor:
               f"mean_tpot_ms={record['mean_tpot_ms']:.2f} "
               f"mean_throughput={record['mean_throughput']:.2f}")
 
-    def profile(self, batch_size=1, time_limit_s=10):
+    def profile(self, batch_size=1, time_limit_s=10, request_limit=None):
+        """_summary_
+
+        Args:
+            batch_size (int, optional): batch size. Defaults to 1.
+            time_limit_s (int, optional): max elapsed time to sample response data. Defaults to 10 seconds.
+            request_limit (_type_, optional): max number of requests to sampled. Defaults to None.
+                Cannot be used with time_limit_s together.
+        """
+        assert time_limit_s is not None and request_limit is None or \
+               time_limit_s is None and request_limit is not None, "time_limit and request_limit cannot be both specified at the same time"
         num_added = 0
         # constant batch size
         t0 = time.time()
@@ -172,21 +185,39 @@ class Executor:
             self.add_request(next_request)
         llm = self.llm
         llm_engine = llm.llm_engine
-        while llm_engine.has_unfinished_requests():
-            dt = time.time() - t0
-            if dt > time_limit_s:
-                break
-            while llm_engine.get_num_unfinished_requests(
-            ) < batch_size:
-                next_request = self.dataset.fetch_next(config.shuffle_data)
-                num_added += 1
-                self.add_request(next_request)
-
-            step_outputs = llm.llm_engine.step()
-            for output in step_outputs:
-                # Only requests finished within simulation time are recorded
-                if output.finished:
-                    self.finish_request(output, batch_size)
+        if time_limit_s is not None:
+            while (time.time() - t0) < time_limit_s:
+                # saturate the worker with max batch sizes
+                while llm_engine.get_num_unfinished_requests() < batch_size:
+                    next_request = self.dataset.fetch_next(config.shuffle_data)
+                    num_added += 1
+                    self.add_request(next_request)
+                # run decoding step
+                step_outputs = llm.llm_engine.step()
+                # record finished request
+                for output in step_outputs:
+                    # Only requests finished within simulation time are recorded
+                    if output.finished:
+                        self.finish_request(output, batch_size)
+                t1 = time.time()
+        else:
+            while num_added < request_limit or llm_engine.has_unfinished_requests(
+            ):
+                # saturate the worker with max batch sizes
+                while llm_engine.get_num_unfinished_requests(
+                ) < batch_size and num_added < request_limit:
+                    next_request = self.dataset.fetch_next(config.shuffle_data)
+                    num_added += 1
+                    self.add_request(next_request)
+                # run decoding step
+                step_outputs = llm.llm_engine.step()
+                # record finished request
+                for output in step_outputs:
+                    # Only requests finished within simulation time are recorded
+                    if output.finished:
+                        self.finish_request(output, batch_size)
+                t1 = time.time()
+        dt = t1 - t0
         # Finish all unfinished requests
         for unfinished_requests in llm_engine.scheduler.waiting + llm_engine.scheduler.running:
             request_id = unfinished_requests.request_id
@@ -196,7 +227,7 @@ class Executor:
         assert len(
             self.outputs) > 0, "Too few requests finished within time limits"
         # dump the results
-        records = self.outputs.values()
+        records = list(self.outputs.values())
         total_num_tokens = sum(record['num_output_tokens']
                                for record in records)
         global_throughput = total_num_tokens / dt
@@ -209,22 +240,21 @@ class Executor:
             "global_throughput": global_throughput,
             "mean_tpot_ms": mean_tpot_ms,
             "mean_throughput": mean_throughput,
+            "use_speculate": config.use_speculate,
         }
         if config.use_speculate:
             mean_acceptance = np.mean(
                 [record['mean_accept_length'] for record in records])
             global_results['mean_acceptance'] = mean_acceptance
+
         with open(self.summary_output, 'a+') as fh:
             fh.write(json.dumps(global_results))
             fh.write("\n")
+
         with open(self.full_output, 'a+') as fh:
             for record in records:
                 fh.write(json.dumps(record))
                 fh.write("\n")
-
-    def profile_llm_generate(self):
-        # llm.generate mode
-        pass
 
 
 def main(config: Config):
@@ -233,7 +263,6 @@ def main(config: Config):
     time_limit = 5 * 60  # simulate 5 minutes
     for bs in batch_sizes:
         executor.profile(bs, time_limit_s=time_limit)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Benchmark script for vllm")
