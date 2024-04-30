@@ -40,7 +40,7 @@ models = ["CodeLlama-70b-Python-hf"]
 #models = ["Llama-2-70b-chat-hf"]
 #datasets = ["humaneval"]
 #models = ["CodeLlama-34b-Python-hf", "CodeLlama-70b-Python-hf"]
-draft_models = ["Suzuka-73M","Suzuka-120M","TinyLlama-1.1B-Chat-v1.0"]
+draft_models = ["TinyLlama-1.1B-Chat-v1.0"]
 for dataset in datasets:
     for model in models:
         cur_dir = f"{base_dir}/{dataset}/{model}"

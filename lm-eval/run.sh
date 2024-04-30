@@ -1,10 +1,6 @@
-#gsm8k,mmlu
-tasks=gsm8k,mmlu
-tasks=gsm8k
+tasks=gsm8k,gsm8k_cot_self_consistency,gsm8k_cot_zeroshot
 target=/home/ubuntu/models/Llama-2-70b-chat-hf
-#target=/home/ubuntu/models/draft_models/Suzuka-120M
-#target=/home/ubuntu/models/draft_models/TinyLlama-1.1B-Chat-v1.0
-draft=/home/ubuntu/models/draft_models/Suzuka-120M
+draft=/home/ubuntu/models/TinyLlama-1.1B-Chat-v1.0
 
 # Huggingface Reference
 #accelerate launch -m lm_eval --model hf \
@@ -16,9 +12,9 @@ draft=/home/ubuntu/models/draft_models/Suzuka-120M
 lm_eval --model vllm \
     --model_args pretrained=$target,tensor_parallel_size=8,dtype=auto,gpu_memory_utilization=0.8,data_parallel_size=1,draft_model=$draft\
     --tasks $tasks \
-    --batch_size 64
+    --batch_size 128 | tee specdec.log
 
 lm_eval --model vllm \
-    --model_args pretrained=$target,tensor_parallel_size=1,dtype=auto,gpu_memory_utilization=0.8,data_parallel_size=1\
+    --model_args pretrained=$target,tensor_parallel_size=8,dtype=auto,gpu_memory_utilization=0.8,data_parallel_size=1\
     --tasks $tasks \
-    --batch_size 64
+    --batch_size 128 | tee baseline.log

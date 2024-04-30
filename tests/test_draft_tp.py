@@ -11,7 +11,7 @@ sampling_params = SamplingParams(temperature=0.0, max_tokens=512)
 
 # Create an LLM.
 llm = LLM(model="/home/ubuntu/models/Llama-2-7b-chat-hf",
-          draft_model="/home/ubuntu/models/Suzuka-73M",
+          draft_model="/home/ubuntu/models/TinyLlama-1.1B-Chat-v1.0",
           tensor_parallel_size=4,
           draft_model_tp_size=2,
           speculate_length=5)

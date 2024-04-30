@@ -16,7 +16,6 @@ sampling_params = SamplingParams(temperature=0.0, max_tokens=200)
 target = "/home/ubuntu/models/Llama-2-7b-chat-hf"
 #draft = "Doctor-Shotgun/smol_llama-220M-GQA-32k-linear"
 draft = "Doctor-Shotgun/TinyLlama-1.1B-32k"
-#draft = "/home/ubuntu/models/Suzuka-73M-4k"
 
 # Create an LLM.
 llm = LLM(model=target,

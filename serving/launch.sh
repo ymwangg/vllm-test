@@ -1,6 +1,5 @@
 model=/home/ubuntu/models/Llama-2-70b-chat-hf
 draft_model=/home/ubuntu/models/TinyLlama-1.1B-Chat-v1.0/
-# draft_model=/home/ubuntu/models/Suzuka-73M
 tp=4
 common_args="--gpu-memory-utilization 0.8 --tensor-parallel-size $tp"
 # Check if $1 matches something

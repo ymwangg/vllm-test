@@ -10,8 +10,6 @@ models = [
 ]
 
 draft_models = [
-    "Suzuka-73M-4k",
-    "Suzuka-120M-4k",
     "TinyLlama-1.1B-Chat-v1.0-4k",
 ]
 
