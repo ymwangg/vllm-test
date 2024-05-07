@@ -1,6 +1,7 @@
 """
 This scripts show how to benchmark speculative decoding on a dataset.
 """
+import vllm
 from vllm import LLM, SamplingParams
 import argparse
 import time
@@ -9,6 +10,7 @@ import numpy as np
 import json
 from dataclasses import dataclass
 from typing import Optional
+from transformers import AutoTokenizer
 
 
 @dataclass
@@ -31,7 +33,7 @@ class BenchmarkConfig:
     # engine configs
     batch_size: int
     tp_size: int
-    draft_tp_size: int
+    draft_model_tp_size: int
     max_tokens: int
     speculate_length: int
     block_size: int
@@ -103,7 +105,7 @@ class BenchmarkConfig:
                             default=1,
                             help='Batch size')
         parser.add_argument('--tp-size', type=int, default=2, help='TP size')
-        parser.add_argument('--draft-tp-size',
+        parser.add_argument('--draft-model-tp-size',
                             type=int,
                             default=1,
                             help='Draft TP size')
@@ -127,10 +129,15 @@ class BenchmarkConfig:
 
 def main(args: BenchmarkConfig):
     # Create a sampling params object.
+    if "gsm8k" in args.dataset.lower():
+        stop = ["Question:","</s>","<|im_end|>"]
+    if "humaneval" in args.dataset.lower():
+        stop=["\nclass", "\ndef", "\n#", "\n@", "\nprint", "\nif", "\n```", "<file_sep>"]
     sampling_params = SamplingParams(temperature=args.temperature,
                                      top_p=args.top_p,
                                      top_k=args.top_k,
                                      frequency_penalty=args.frequency_penalty,
+                                     stop=stop,
                                      max_tokens=args.max_tokens)
 
     # Sample prompts.
@@ -152,6 +159,7 @@ def main(args: BenchmarkConfig):
         if len(prompt) < bs:
             break
 
+    tokenizer = AutoTokenizer.from_pretrained(args.model)
     engine_kwargs = {
         "model": args.model,
         "tensor_parallel_size": args.tp_size,
@@ -161,14 +169,28 @@ def main(args: BenchmarkConfig):
         "block_size": args.block_size,
     }
     if args.use_speculate:
-        engine_kwargs.update({
-            "draft_model":
-            args.draft_model,
-            "speculate_length":
-            args.speculate_length,
-            "draft_model_quantization":
-            args.draft_model_quantization,
-        })
+        from packaging import version
+
+        if version.parse(vllm.__version__) >= version.parse("0.4.1"):
+            engine_kwargs.update({
+                "speculative_model":
+                args.draft_model,
+                "num_speculative_tokens":
+                args.speculate_length,
+                "use_v2_block_manager":
+                True,
+            })
+        else:
+            engine_kwargs.update({
+                "draft_model":
+                args.draft_model,
+                "speculate_length":
+                args.speculate_length,
+                "draft_model_quantization":
+                args.draft_model_quantization,
+                "draft_model_tp_size":
+                args.draft_model_tp_size,
+            })
     llm = LLM(**engine_kwargs)
 
     # warm up
@@ -198,13 +220,15 @@ def main(args: BenchmarkConfig):
             prompt_lens.append(prompt_len)
             text_len = len(output.outputs[0].token_ids)
             text_lens.append(text_len)
-            if args.use_speculate:
+            if args.use_speculate and hasattr(output.outputs[0], "acceptance_history"):
                 history.append(output.outputs[0].acceptance_history)
                 m = np.mean(history[-1])
+            else:
+                m = 0
             token_ids = output.prompt_token_ids + output.outputs[0].token_ids
             # Make sure eos is the last token if any.
-            if 2 in token_ids:
-                assert token_ids[-1] == 2
+            if tokenizer.eos_token_id in token_ids:
+                assert token_ids[-1] == tokenizer.eos_token_id
             records.append({
                 'prompt': prompt,
                 'response': generated_text,
