@@ -1,3 +1,4 @@
+import torch
 import numpy as np
 
 from vllm import LLM, SamplingParams
@@ -11,7 +12,7 @@ prompts = [
     "The future of AI is",
 ]
 # Create a sampling params object.
-sampling_params = SamplingParams(temperature=0.0, max_tokens=512, logprobs=10)
+sampling_params = SamplingParams(temperature=0.0, max_tokens=512, logprobs=5)
 
 # Create an LLM.
 llm = LLM(model="lmsys/vicuna-13b-v1.5",
@@ -50,7 +51,8 @@ while llm.llm_engine.has_unfinished_requests():
         cur_cum_logprob = seq_output.cumulative_logprob
         request_cache[request_id]['cum_logprob'] = cur_cum_logprob
         delta_cum_logprobs = cur_cum_logprob - prev_cum_logprob
-        assert delta_cum_logprobs == sum(new_logprobs)
+        ref_sum = sum(new_logprobs) if isinstance(new_logprobs[0], float) else sum([x.logprob for x in new_logprobs])
+        torch.testing.assert_close(delta_cum_logprobs, ref_sum)
         print("-" * 100)
         print(f"request_id={request_id}, response=",
               list(zip(new_token_ids, new_logprobs)))
