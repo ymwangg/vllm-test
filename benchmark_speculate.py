@@ -129,6 +129,7 @@ class BenchmarkConfig:
 
 def main(args: BenchmarkConfig):
     # Create a sampling params object.
+    stop = []
     if "gsm8k" in args.dataset.lower():
         stop = ["Question:","</s>","<|im_end|>"]
     if "humaneval" in args.dataset.lower():
@@ -167,6 +168,7 @@ def main(args: BenchmarkConfig):
         "gpu_memory_utilization": args.gpu_memory_utilization,
         "quantization": args.quantization,
         "block_size": args.block_size,
+        "disable_custom_all_reduce": False,
     }
     if args.use_speculate:
         from packaging import version
@@ -179,6 +181,8 @@ def main(args: BenchmarkConfig):
                 args.speculate_length,
                 "use_v2_block_manager":
                 True,
+                "draft_model_tp_size":
+                args.draft_model_tp_size,
             })
         else:
             engine_kwargs.update({
@@ -195,6 +199,13 @@ def main(args: BenchmarkConfig):
 
     # warm up
     llm.generate(prompts_list[0], sampling_params)
+
+    if True:
+        from torch.profiler import profile, record_function, ProfilerActivity
+        with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:
+            llm.generate(prompts_list[0], sampling_params)
+
+        prof.export_chrome_trace("trace.json")
 
     outputs_list = []
     t0 = time.monotonic()

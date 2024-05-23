@@ -9,6 +9,7 @@ import argparse
 import os
 import yaml
 import random
+import vllm
 
 from fastchat.model.model_adapter import get_conversation_template
 from dataclasses import dataclass, fields
@@ -34,6 +35,7 @@ class Config:
     speculate_length: int = 5
     enforce_eager: bool = False
     tp_size: int = 1
+    draft_model_tp_size: int = 1
 
     gpu_memory_utilization: float = 0.8
 
@@ -124,10 +126,27 @@ class Executor:
             "trust_remote_code": True,
         }
         if config.use_speculate:
-            engine_kwargs.update({
-                "draft_model": config.draft_model,
-                "speculate_length": config.speculate_length,
-            })
+            from packaging import version
+            if version.parse(vllm.__version__) >= version.parse("0.4.1"):
+                engine_kwargs.update({
+                    "speculative_model":
+                    config.draft_model,
+                    "num_speculative_tokens":
+                    config.speculate_length,
+                    "use_v2_block_manager":
+                    True,
+                    "draft_model_tp_size":
+                    config.draft_model_tp_size,
+                })
+            else:
+                engine_kwargs.update({
+                    "draft_model":
+                    config.draft_model,
+                    "speculate_length":
+                    config.speculate_length,
+                    "draft_model_tp_size":
+                    config.draft_model_tp_size,
+                })
         llm = LLM(**engine_kwargs)
         return llm
 
@@ -260,6 +279,7 @@ class Executor:
 def main(config: Config):
     executor = Executor(config)
     batch_sizes = [1, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128]
+    # batch_sizes = [1, 4, 16, 64, 128]
     time_limit = 5 * 60  # simulate 5 minutes
     for bs in batch_sizes:
         executor.profile(bs, time_limit_s=time_limit)
