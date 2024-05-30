@@ -85,6 +85,10 @@ def _fwd_kernel(
     stride_value_2,
     stride_block_tables_0,
     stride_causal_mask_0,
+    # NOTE: debugging variables
+    # output_mask,
+    # stride_output_mask_0,
+    # stride_output_mask_1,
     head_size: tl.constexpr,
     num_query_tokens: tl.constexpr,
     block_size: tl.constexpr,
@@ -96,8 +100,9 @@ def _fwd_kernel(
     block_m_idx = tl.program_id(2)
 
     kv_head_idx = head_idx // num_queries_per_kv
-    prefix_len = tl.load(context_lens + batch_idx) - num_query_tokens
-    ctx_len = prefix_len + (block_m_idx + 1) * block_size
+    orig_ctx_len = tl.load(context_lens + batch_idx)
+    prefix_len = orig_ctx_len - num_query_tokens
+    ctx_len = tl.minimum(prefix_len + (block_m_idx + 1) * block_size, orig_ctx_len)
 
     offs_m = block_m_idx * block_size + tl.arange(0, block_size)
     offs_block_size = tl.arange(0, block_size)
@@ -141,6 +146,8 @@ def _fwd_kernel(
             (token_offs[None, :] < ctx_len) &
             (token_offs[None, :] >= prefix_len))
         mask = tl.load(causal_mask + offs_mask, mask=load_mask, other=auto_mask)
+        # NOTE: debugging variables
+        # tl.store(output_mask + batch_idx * stride_output_mask_0 + offs_m[:, None] * stride_output_mask_1 + token_offs[None, :], load_mask, mask=load_mask)
         qk = qk * sm_scale + tl.where(mask, 0, -1.0e6)
         # calculate m_ij and l_ij
         m_ij = tl.maximum(m_i, tl.max(qk, 1))
@@ -196,6 +203,9 @@ def tree_attention_triton(
         block_size, num_kv_heads, head_size)
     grid = (bs, num_heads, cdiv(seq_len, block_size))
 
+    # NOTE: debugging variables
+    # output_mask = torch.zeros(bs, seq_len, max_seq_len, device=query.device)
+
     _fwd_kernel[grid](
         query,  # [bsz, num_query_tokens, num_heads, head_size]
         output,  # [bsz, num_query_tokens, num_heads, head_size]
@@ -218,6 +228,10 @@ def tree_attention_triton(
         value_cache.stride(2),
         block_tables.stride(0),
         causal_mask.stride(0),
+        # debugging variables
+        # output_mask,
+        # output_mask.stride(0),
+        # output_mask.stride(1),
         head_size,
         seq_len,
         block_size,
@@ -234,58 +248,59 @@ if __name__ == "__main__":
     device = "cuda:0"
 
     bs = 16
-    seq_len = 32
-    num_heads = 8
-    num_kv_heads = 1
-    head_size = 128
-    dtype = torch.float16
-    query = torch.rand(bs,
-                       seq_len,
-                       num_heads,
-                       head_size,
-                       device=device,
-                       dtype=dtype)
-    key_cache = torch.rand(num_blocks,
-                           block_size,
-                           num_kv_heads,
-                           head_size,
-                           device=device,
-                           dtype=dtype)
-    value_cache = torch.rand(num_blocks,
-                             block_size,
-                             num_kv_heads,
-                             head_size,
-                             device=device,
-                             dtype=dtype)
+    for seq_len in (1, 6, 16, 18):
+        num_heads = 8
+        num_kv_heads = 1
+        head_size = 128
+        dtype = torch.float16
+        query = torch.rand(bs,
+                          seq_len,
+                          num_heads,
+                          head_size,
+                          device=device,
+                          dtype=dtype)
+        key_cache = torch.rand(num_blocks,
+                              block_size,
+                              num_kv_heads,
+                              head_size,
+                              device=device,
+                              dtype=dtype)
+        value_cache = torch.rand(num_blocks,
+                                block_size,
+                                num_kv_heads,
+                                head_size,
+                                device=device,
+                                dtype=dtype)
 
-    block_tables = torch.zeros(bs,
-                               cdiv(max_seq_len, block_size),
-                               dtype=torch.int,
-                               device=device)
-    context_lens = torch.randint(100,
-                                 1000,
-                                 size=(bs, ),
-                                 dtype=torch.int,
-                                 device=device)
-    causal_mask = torch.tril(torch.ones(seq_len, seq_len, device=device))
+        block_tables = torch.zeros(bs,
+                                  cdiv(max_seq_len, block_size),
+                                  dtype=torch.int,
+                                  device=device)
+        context_lens = torch.randint(100,
+                                    1000,
+                                    size=(bs, ),
+                                    dtype=torch.int,
+                                    device=device)
+        causal_mask = torch.tril(torch.ones(seq_len, seq_len, device=device))
 
-    ref_naive = ref_tree_attention(query, key_cache, value_cache, block_tables,
-                                   context_lens, causal_mask)
-    ref_flash = flash_attn_with_kvcache(query,
-                                        key_cache,
-                                        value_cache,
-                                        cache_seqlens=context_lens,
-                                        block_table=block_tables,
-                                        causal=True)
-    torch.testing.assert_close(ref_naive, ref_flash, rtol=1e-3, atol=1e-3)
+        ref_naive = ref_tree_attention(query, key_cache, value_cache, block_tables,
+                                      context_lens, causal_mask)
+        ref_flash = flash_attn_with_kvcache(query,
+                                            key_cache,
+                                            value_cache,
+                                            cache_seqlens=context_lens,
+                                            block_table=block_tables,
+                                            causal=True)
+        torch.testing.assert_close(ref_naive, ref_flash, rtol=1e-3, atol=1e-3)
 
-    for _ in range(10):
-        random_mask = (torch.rand(seq_len, seq_len, device=device) <
-                       0.5) * causal_mask
+        for _ in range(10):
+            random_mask = (torch.rand(seq_len, seq_len, device=device) <
+                          0.5) * causal_mask
+            random_mask = random_mask.to(torch.half)
 
-        ref_naive = ref_tree_attention(query, key_cache, value_cache,
-                                       block_tables, context_lens, random_mask)
-        out = tree_attention_triton(query, key_cache, value_cache, block_tables,
-                                    context_lens, random_mask, None)
+            ref_naive = ref_tree_attention(query, key_cache, value_cache,
+                                          block_tables, context_lens, random_mask)
+            out = tree_attention_triton(query, key_cache, value_cache, block_tables,
+                                        context_lens, random_mask, None)
 
-        torch.testing.assert_close(ref_naive, out, rtol=1e-3, atol=1e-3)
+            torch.testing.assert_close(ref_naive, out, rtol=1e-3, atol=1e-3)
