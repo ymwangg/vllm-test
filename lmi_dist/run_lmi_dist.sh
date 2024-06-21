@@ -13,6 +13,6 @@ MPIRUN="mpirun --allow-run-as-root --bind-to none --mca btl_vader_single_copy_me
 
 CMD="$MPIRUN -n $tp python  benchmark_speculate.py --tp-size $tp --model $target --draft-model $draft --batch-size $bs --dataset $dataset --max-steps $max_steps  --max-tokens $max_tokens --draft-tp-size $draft_tp  --gpu-memory-utilization $gpu_util"
 
-$CMD --use-speculate --speculate-length 5
+$CMD --use-speculate --speculate-length 5 --run-profile
 
-$CMD
+$CMD --run-profile
