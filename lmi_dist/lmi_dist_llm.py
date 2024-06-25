@@ -3,6 +3,7 @@ from typing import Optional, Union, List
 import lmi_dist.init_engine
 from vllm.utils import Counter
 from vllm import SamplingParams
+from vllm.inputs import LLMInputs
 from vllm.lora.request import LoRARequest
 from vllm.outputs import RequestOutput
 from lmi_dist.api import Request, RequestParams
@@ -97,7 +98,7 @@ class LmiDistLLM:
         params = RequestParams()
         params.sampling_params = sampling_params
         self.engine.add_request(
-            Request(id=request_id, prompt=prompt, params=params))
+            Request(id=request_id, inputs=LLMInputs(prompt_token_ids=[],prompt=prompt), params=params))
 
     def _run_engine(self, use_tqdm: bool) -> List[RequestOutput]:
         # Run the engine.
