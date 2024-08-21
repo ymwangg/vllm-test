@@ -169,6 +169,8 @@ def main(args: BenchmarkConfig):
         "quantization": args.quantization,
         "block_size": args.block_size,
         "disable_custom_all_reduce": False,
+        # easier to debug
+        # "worker_use_ray": True,
     }
     if args.use_speculate:
         from packaging import version
@@ -181,9 +183,14 @@ def main(args: BenchmarkConfig):
                 args.speculate_length,
                 "use_v2_block_manager":
                 True,
-                "draft_model_tp_size":
-                args.draft_model_tp_size,
             })
+            if version.parse(vllm.__version__) >= version.parse("0.5.1"):
+                engine_kwargs.update({
+                "speculative_draft_tensor_parallel_size":
+                args.draft_model_tp_size,})
+            else:
+                engine_kwargs.update({
+                    "draft_model_tp_size": args.draft_model_tp_size})
         else:
             engine_kwargs.update({
                 "draft_model":
@@ -236,7 +243,7 @@ def main(args: BenchmarkConfig):
                 m = np.mean(history[-1])
             else:
                 m = 0
-            token_ids = output.prompt_token_ids + output.outputs[0].token_ids
+            token_ids = output.prompt_token_ids + list(output.outputs[0].token_ids)
             # Make sure eos is the last token if any.
             if tokenizer.eos_token_id in token_ids:
                 assert token_ids[-1] == tokenizer.eos_token_id
