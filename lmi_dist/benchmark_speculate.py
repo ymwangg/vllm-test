@@ -179,7 +179,6 @@ def main(args: BenchmarkConfig):
         "enforce_eager": args.enforce_eager,
         "gpu_memory_utilization": args.gpu_memory_utilization,
         "disable_custom_all_reduce": args.disable_custom_all_reduce,
-        "vmmtensor_kv_cache": args.vmmtensor_kv_cache,
     }
 
     from lmi_dist_llm import LmiDistLLM
