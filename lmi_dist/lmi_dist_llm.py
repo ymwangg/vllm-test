@@ -98,7 +98,7 @@ class LmiDistLLM:
         params = RequestParams()
         params.sampling_params = sampling_params
         self.engine.add_request(
-            Request(id=request_id, inputs=LLMInputs(prompt_token_ids=[],prompt=prompt), params=params))
+            Request(id=request_id, prompt=prompt, params=params, lora_request=lora_request))
 
     def _run_engine(self, use_tqdm: bool) -> List[RequestOutput]:
         # Run the engine.

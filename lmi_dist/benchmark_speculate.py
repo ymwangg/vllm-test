@@ -233,7 +233,7 @@ def main(args: BenchmarkConfig):
                 m = np.mean(history[-1])
             else:
                 m = 0
-            token_ids = output.prompt_token_ids + output.outputs[0].token_ids
+            token_ids = output.prompt_token_ids + list(output.outputs[0].token_ids)
             # Make sure eos is the last token if any.
             #if 2 in token_ids:
             #    assert token_ids[-1] == 2
