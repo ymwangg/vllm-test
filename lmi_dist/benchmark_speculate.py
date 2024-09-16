@@ -45,6 +45,7 @@ class BenchmarkConfig:
     speculate_length: int
     disable_custom_all_reduce: bool
     vmmtensor_kv_cache: bool
+    enable_bonus_token: bool
 
     # human_eval
     run_human_eval: bool
@@ -131,6 +132,9 @@ class BenchmarkConfig:
         parser.add_argument('--run-profile',
                             action="store_true",
                             help="Save profile trace")
+        parser.add_argument('--enable-bonus-token',
+                            action="store_true",
+                            help="Enable bonus token")
 
         # Parse the command-line arguments and create an instance of BenchmarkConfig
         args = parser.parse_args()
@@ -188,6 +192,7 @@ def main(args: BenchmarkConfig):
             "draft_model": args.draft_model,
             "speculate_length": args.speculate_length,
             "draft_model_tp_size": args.draft_tp_size,
+            "speculate_enable_bonus_token": args.enable_bonus_token,
         })
 
     llm = LmiDistLLM(**engine_kwargs)
