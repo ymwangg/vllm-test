@@ -1,0 +1,237 @@
+[569c2f6f9558:12522] Warning: could not find environment variable "PYTHONPATH"
+[1,6]<stdout>:INFO 06-21 21:15:42 utils.py:660] Found nccl from library /opt/djl/vllm/.config/vllm/nccl/cu12/libnccl.so.2.18.1
+[1,1]<stdout>:INFO 06-21 21:15:42 utils.py:660] Found nccl from library /opt/djl/vllm/.config/vllm/nccl/cu12/libnccl.so.2.18.1
+[1,6]<stderr>:The draft model's max context length (2048) is not equals target model (8192), the max context length is now set to 2048.
+[1,1]<stderr>:The draft model's max context length (2048) is not equals target model (8192), the max context length is now set to 2048.
+[1,5]<stdout>:INFO 06-21 21:15:42 utils.py:660] Found nccl from library /opt/djl/vllm/.config/vllm/nccl/cu12/libnccl.so.2.18.1
+[1,4]<stdout>:INFO 06-21 21:15:42 utils.py:660] Found nccl from library /opt/djl/vllm/.config/vllm/nccl/cu12/libnccl.so.2.18.1
+[1,0]<stdout>:INFO 06-21 21:15:42 utils.py:660] Found nccl from library /opt/djl/vllm/.config/vllm/nccl/cu12/libnccl.so.2.18.1
+[1,3]<stdout>:INFO 06-21 21:15:42 utils.py:660] Found nccl from library /opt/djl/vllm/.config/vllm/nccl/cu12/libnccl.so.2.18.1
+[1,5]<stderr>:The draft model's max context length (2048) is not equals target model (8192), the max context length is now set to 2048.
+[1,0]<stderr>:The draft model's max context length (2048) is not equals target model (8192), the max context length is now set to 2048.
+[1,4]<stderr>:The draft model's max context length (2048) is not equals target model (8192), the max context length is now set to 2048.
+[1,3]<stderr>:The draft model's max context length (2048) is not equals target model (8192), the max context length is now set to 2048.
+[1,7]<stdout>:INFO 06-21 21:15:42 utils.py:660] Found nccl from library /opt/djl/vllm/.config/vllm/nccl/cu12/libnccl.so.2.18.1
+[1,2]<stdout>:INFO 06-21 21:15:42 utils.py:660] Found nccl from library /opt/djl/vllm/.config/vllm/nccl/cu12/libnccl.so.2.18.1
+[1,7]<stderr>:The draft model's max context length (2048) is not equals target model (8192), the max context length is now set to 2048.
+[1,2]<stderr>:The draft model's max context length (2048) is not equals target model (8192), the max context length is now set to 2048.
+[1,1]<stdout>:INFO 06-21 21:15:43 selector.py:27] Using FlashAttention-2 backend.
+[1,6]<stdout>:INFO 06-21 21:15:43 selector.py:27] Using FlashAttention-2 backend.
+[1,4]<stdout>:INFO 06-21 21:15:43 selector.py:27] Using FlashAttention-2 backend.
+[1,7]<stdout>:INFO 06-21 21:15:43 selector.py:27] Using FlashAttention-2 backend.
+[1,3]<stdout>:INFO 06-21 21:15:43 selector.py:27] Using FlashAttention-2 backend.
+[1,5]<stdout>:INFO 06-21 21:15:43 selector.py:27] Using FlashAttention-2 backend.
+[1,0]<stdout>:INFO 06-21 21:15:43 selector.py:27] Using FlashAttention-2 backend.
+[1,2]<stdout>:INFO 06-21 21:15:43 selector.py:27] Using FlashAttention-2 backend.
+[1,2]<stderr>:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,1]<stderr>:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,6]<stderr>:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,4]<stderr>:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,7]<stderr>:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,3]<stderr>:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,5]<stderr>:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,0]<stderr>:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,2]<stderr>:[rank2]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,0]<stderr>:[rank0]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,1]<stderr>:[rank1]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,5]<stderr>:[rank5]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,3]<stderr>:[rank3]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,7]<stderr>:[rank7]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,4]<stderr>:[rank4]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,6]<stderr>:[rank6]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,2]<stderr>:[rank2]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,0]<stderr>:[rank0]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,4]<stderr>:[rank4]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,1]<stderr>:[rank1]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,4]<stderr>:[rank4]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,2]<stderr>:[rank2]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,3]<stderr>:[rank3]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,0]<stderr>:[rank0]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,4]<stdout>:INFO 06-21 21:15:44 pynccl_utils.py:43] vLLM is using nccl==2.18.1
+[1,1]<stderr>:[rank1]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,5]<stderr>:[rank5]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,2]<stdout>:INFO 06-21 21:15:44 pynccl_utils.py:43] vLLM is using nccl==2.18.1
+[1,0]<stdout>:INFO 06-21 21:15:44 pynccl_utils.py:43] vLLM is using nccl==2.18.1
+[1,7]<stderr>:[rank7]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,3]<stderr>:[rank3]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,5]<stderr>:[rank5]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,6]<stderr>:[rank6]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,7]<stderr>:[rank7]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,3]<stdout>:INFO 06-21 21:15:44 pynccl_utils.py:43] vLLM is using nccl==2.18.1
+[1,1]<stdout>:INFO 06-21 21:15:44 pynccl_utils.py:43] vLLM is using nccl==2.18.1
+[1,5]<stdout>:INFO 06-21 21:15:44 pynccl_utils.py:43] vLLM is using nccl==2.18.1
+[1,7]<stdout>:INFO 06-21 21:15:44 pynccl_utils.py:43] vLLM is using nccl==2.18.1
+[1,6]<stderr>:[rank6]:[W Utils.hpp:166] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function getCvarBool)
+[1,6]<stdout>:INFO 06-21 21:15:44 pynccl_utils.py:43] vLLM is using nccl==2.18.1
+[1,5]<stdout>:INFO 06-21 21:15:55 utils.py:132] reading GPU P2P access cache from /opt/djl/vllm/.config/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1,1]<stdout>:INFO 06-21 21:15:55 utils.py:132] reading GPU P2P access cache from /opt/djl/vllm/.config/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1,7]<stdout>:INFO 06-21 21:15:55 utils.py:132] reading GPU P2P access cache from /opt/djl/vllm/.config/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1,6]<stdout>:INFO 06-21 21:15:55 utils.py:132] reading GPU P2P access cache from /opt/djl/vllm/.config/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1,4]<stdout>:INFO 06-21 21:15:55 utils.py:132] reading GPU P2P access cache from /opt/djl/vllm/.config/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1,2]<stdout>:INFO 06-21 21:15:55 utils.py:132] reading GPU P2P access cache from /opt/djl/vllm/.config/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1,3]<stdout>:INFO 06-21 21:15:55 utils.py:132] reading GPU P2P access cache from /opt/djl/vllm/.config/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1,0]<stdout>:INFO 06-21 21:15:55 utils.py:132] reading GPU P2P access cache from /opt/djl/vllm/.config/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1,3]<stdout>:INFO 06-21 21:16:10 model_runner.py:175] Loading model weights took 16.4312 GB
+[1,3]<stdout>:INFO 06-21 21:16:10 selector.py:27] Using FlashAttention-2 backend.
+[1,2]<stdout>:INFO 06-21 21:16:10 model_runner.py:175] Loading model weights took 16.4312 GB
+[1,2]<stdout>:INFO 06-21 21:16:10 selector.py:27] Using FlashAttention-2 backend.
+[1,0]<stdout>:INFO 06-21 21:16:10 model_runner.py:175] Loading model weights took 16.4312 GB
+[1,0]<stdout>:INFO 06-21 21:16:10 selector.py:27] Using FlashAttention-2 backend.
+[1,4]<stdout>:INFO 06-21 21:16:11 model_runner.py:175] Loading model weights took 16.4312 GB
+[1,4]<stdout>:INFO 06-21 21:16:11 selector.py:27] Using FlashAttention-2 backend.
+[1,6]<stdout>:INFO 06-21 21:16:11 model_runner.py:175] Loading model weights took 16.4312 GB
+[1,6]<stdout>:INFO 06-21 21:16:11 selector.py:27] Using FlashAttention-2 backend.
+[1,1]<stdout>:INFO 06-21 21:16:12 model_runner.py:175] Loading model weights took 16.4312 GB
+[1,1]<stdout>:INFO 06-21 21:16:12 selector.py:27] Using FlashAttention-2 backend.
+[1,7]<stdout>:INFO 06-21 21:16:14 model_runner.py:175] Loading model weights took 16.4312 GB
+[1,7]<stdout>:INFO 06-21 21:16:14 selector.py:27] Using FlashAttention-2 backend.
+[1,5]<stdout>:INFO 06-21 21:16:14 model_runner.py:175] Loading model weights took 16.4312 GB
+[1,5]<stdout>:INFO 06-21 21:16:14 selector.py:27] Using FlashAttention-2 backend.
+[1,3]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,2]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,0]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,3]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,2]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,0]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,4]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,6]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,1]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,4]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,6]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,1]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,5]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,7]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,5]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,7]<stderr>:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[1,3]<stdout>:INFO 06-21 21:16:28 custom_all_reduce.py:246] Registering 627 cuda graph addresses
+[1,7]<stdout>:INFO 06-21 21:16:28 custom_all_reduce.py:246] Registering 627 cuda graph addresses
+[1,6]<stdout>:INFO 06-21 21:16:28 custom_all_reduce.py:246] Registering 627 cuda graph addresses
+[1,2]<stdout>:INFO 06-21 21:16:28 custom_all_reduce.py:246] Registering 627 cuda graph addresses
+[1,5]<stdout>:INFO 06-21 21:16:28 custom_all_reduce.py:246] Registering 627 cuda graph addresses
+[1,1]<stdout>:INFO 06-21 21:16:28 custom_all_reduce.py:246] Registering 627 cuda graph addresses
+[1,4]<stdout>:INFO 06-21 21:16:28 custom_all_reduce.py:246] Registering 627 cuda graph addresses
+[1,0]<stdout>:INFO 06-21 21:16:28 custom_all_reduce.py:246] Registering 627 cuda graph addresses
+[1,2]<stdout>:INFO 06-21 21:16:32 custom_all_reduce.py:246] Registering 3059 cuda graph addresses
+[1,1]<stdout>:INFO 06-21 21:16:32 custom_all_reduce.py:246] Registering 3059 cuda graph addresses
+[1,0]<stdout>:INFO 06-21 21:16:32 custom_all_reduce.py:246] Registering 3059 cuda graph addresses
+[1,4]<stdout>:INFO 06-21 21:16:32 custom_all_reduce.py:246] Registering 3059 cuda graph addresses
+[1,5]<stdout>:INFO 06-21 21:16:32 custom_all_reduce.py:246] Registering 3059 cuda graph addresses
+[1,3]<stdout>:INFO 06-21 21:16:32 custom_all_reduce.py:246] Registering 3059 cuda graph addresses
+[1,7]<stdout>:INFO 06-21 21:16:32 custom_all_reduce.py:246] Registering 3059 cuda graph addresses
+[1,6]<stdout>:INFO 06-21 21:16:32 custom_all_reduce.py:246] Registering 3059 cuda graph addresses
+[1,6]<stdout>:INFO 06-21 21:16:32 model_runner.py:937] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,6]<stdout>:INFO 06-21 21:16:32 model_runner.py:941] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,4]<stdout>:INFO 06-21 21:16:32 model_runner.py:937] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,4]<stdout>:INFO 06-21 21:16:32 model_runner.py:941] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,5]<stdout>:INFO 06-21 21:16:32 model_runner.py:937] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,5]<stdout>:INFO 06-21 21:16:32 model_runner.py:941] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,3]<stdout>:INFO 06-21 21:16:32 model_runner.py:937] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,3]<stdout>:INFO 06-21 21:16:32 model_runner.py:941] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,7]<stdout>:INFO 06-21 21:16:32 model_runner.py:937] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,7]<stdout>:INFO 06-21 21:16:32 model_runner.py:941] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,2]<stdout>:INFO 06-21 21:16:32 model_runner.py:937] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,2]<stdout>:INFO 06-21 21:16:32 model_runner.py:941] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,1]<stdout>:INFO 06-21 21:16:32 model_runner.py:937] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,1]<stdout>:INFO 06-21 21:16:32 model_runner.py:941] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,0]<stdout>:INFO 06-21 21:16:32 model_runner.py:937] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,0]<stdout>:INFO 06-21 21:16:32 model_runner.py:941] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,5]<stdout>:INFO 06-21 21:16:38 custom_all_reduce.py:246] Registering 5635 cuda graph addresses
+[1,6]<stdout>:INFO 06-21 21:16:38 custom_all_reduce.py:246] Registering 5635 cuda graph addresses
+[1,7]<stdout>:INFO 06-21 21:16:38 custom_all_reduce.py:246] Registering 5635 cuda graph addresses
+[1,4]<stdout>:INFO 06-21 21:16:38 custom_all_reduce.py:246] Registering 5635 cuda graph addresses
+[1,2]<stdout>:INFO 06-21 21:16:38 custom_all_reduce.py:246] Registering 5635 cuda graph addresses
+[1,1]<stdout>:INFO 06-21 21:16:38 custom_all_reduce.py:246] Registering 5635 cuda graph addresses
+[1,0]<stdout>:INFO 06-21 21:16:38 custom_all_reduce.py:246] Registering 5635 cuda graph addresses
+[1,3]<stdout>:INFO 06-21 21:16:38 custom_all_reduce.py:246] Registering 5635 cuda graph addresses
+[1,3]<stdout>:INFO 06-21 21:16:38 model_runner.py:1017] Graph capturing finished in 6 secs.
+[1,4]<stdout>:INFO 06-21 21:16:38 model_runner.py:1017] Graph capturing finished in 6 secs.
+[1,1]<stdout>:INFO 06-21 21:16:38 model_runner.py:1017] Graph capturing finished in 6 secs.
+[1,2]<stdout>:INFO 06-21 21:16:38 model_runner.py:1017] Graph capturing finished in 6 secs.
+[1,7]<stdout>:INFO 06-21 21:16:38 model_runner.py:1017] Graph capturing finished in 6 secs.
+[1,5]<stdout>:INFO 06-21 21:16:38 model_runner.py:1017] Graph capturing finished in 6 secs.
+[1,6]<stdout>:INFO 06-21 21:16:38 model_runner.py:1017] Graph capturing finished in 6 secs.
+[1,0]<stdout>:INFO 06-21 21:16:38 model_runner.py:1017] Graph capturing finished in 6 secs.
+[1,0]<stdout>:batch_0 throutput=236.1495151086326 tokens/sec
+[1,0]<stdout>:batch_1 throutput=248.89722367880515 tokens/sec
+[1,0]<stdout>:batch_2 throutput=122.45654102373172 tokens/sec
+[1,0]<stdout>:batch_3 throutput=254.0314084746132 tokens/sec
+[1,0]<stdout>:batch_4 throutput=244.23267855638585 tokens/sec
+[1,0]<stdout>:batch_5 throutput=233.05311614991476 tokens/sec
+[1,0]<stdout>:batch_6 throutput=247.78930213611946 tokens/sec
+[1,0]<stdout>:batch_7 throutput=237.59922850040647 tokens/sec
+[1,0]<stdout>:batch_8 throutput=259.9514135604147 tokens/sec
+[1,0]<stdout>:batch_9 throutput=264.686268703784 tokens/sec
+[1,0]<stdout>:batch_10 throutput=199.7309495395666 tokens/sec
+[1,0]<stdout>:batch_11 throutput=272.5249597238549 tokens/sec
+[1,0]<stdout>:batch_12 throutput=247.23498524317594 tokens/sec
+[1,0]<stdout>:batch_13 throutput=144.98937465878862 tokens/sec
+[1,0]<stdout>:batch_14 throutput=260.43400133836684 tokens/sec
+[1,0]<stdout>:batch_15 throutput=293.9304688382181 tokens/sec
+[1,0]<stdout>:batch_16 throutput=238.75031104683694 tokens/sec
+[1,0]<stdout>:batch_17 throutput=274.1257525830871 tokens/sec
+[1,0]<stdout>:batch_18 throutput=264.8428210396584 tokens/sec
+[1,0]<stdout>:batch_19 throutput=266.20770417174776 tokens/sec
+[1,0]<stdout>:batch_20 throutput=266.9668550360828 tokens/sec
+[1,0]<stdout>:batch_21 throutput=172.6177376790283 tokens/sec
+[1,0]<stdout>:batch_22 throutput=247.45806639725654 tokens/sec
+[1,0]<stdout>:batch_23 throutput=255.7835697792468 tokens/sec
+[1,0]<stdout>:batch_24 throutput=234.27531052012284 tokens/sec
+[1,0]<stdout>:batch_25 throutput=252.39870223372736 tokens/sec
+[1,0]<stdout>:batch_26 throutput=237.745999133008 tokens/sec
+[1,0]<stdout>:batch_27 throutput=240.8143186574472 tokens/sec
+[1,0]<stdout>:batch_28 throutput=253.73703457916858 tokens/sec
+[1,0]<stdout>:batch_29 throutput=269.5905040090077 tokens/sec
+[1,0]<stdout>:batch_30 throutput=284.9051195861324 tokens/sec
+[1,0]<stdout>:batch_31 throutput=259.3278767033279 tokens/sec
+[1,0]<stdout>:batch_32 throutput=188.0630984273465 tokens/sec
+[1,0]<stdout>:batch_33 throutput=178.2601657648427 tokens/sec
+[1,0]<stdout>:batch_34 throutput=223.5402857068043 tokens/sec
+[1,0]<stdout>:batch_35 throutput=217.13987347455193 tokens/sec
+[1,0]<stdout>:batch_36 throutput=261.42636005166 tokens/sec
+[1,0]<stdout>:batch_37 throutput=209.172315439301 tokens/sec
+[1,0]<stdout>:batch_38 throutput=266.52031189822566 tokens/sec
+[1,0]<stdout>:batch_39 throutput=185.08094447111037 tokens/sec
+[1,0]<stdout>:batch_40 throutput=254.0603132930095 tokens/sec
+[1,0]<stdout>:batch_41 throutput=229.528823421352 tokens/sec
+[1,0]<stdout>:batch_42 throutput=176.3332101476995 tokens/sec
+[1,0]<stdout>:batch_43 throutput=213.75316646179007 tokens/sec
+[1,0]<stdout>:batch_44 throutput=176.74560718589737 tokens/sec
+[1,0]<stdout>:batch_45 throutput=249.0207962404629 tokens/sec
+[1,0]<stdout>:batch_46 throutput=210.31022756252992 tokens/sec
+[1,0]<stdout>:batch_47 throutput=272.6053650310624 tokens/sec
+[1,0]<stdout>:batch_48 throutput=235.9592188000898 tokens/sec
+[1,0]<stdout>:batch_49 throutput=251.96548719220797 tokens/sec
+[1,0]<stdout>:Finished in 106.90867356699891 seconds
+[1,0]<stdout>:Mean avg prompt length = 115.76
+[1,0]<stdout>:Mean avg response length = 247.39
+[1,0]<stdout>:Throughput = 231.40311421501497 tokens/s
+[1,0]<stdout>:Avg accepted = 3.242725993457057
+[1,0]<stdout>:Reading samples...
+[1,0]<stderr>:0it [00:00, ?it/s][1,0]<stderr>:100it [00:00, 30779.36it/s][1,0]<stderr>:
+[1,5]<stderr>:[rank5]:[W CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+[1,7]<stderr>:[rank7]:[W CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+[1,4]<stderr>:[rank4]:[W CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+[1,6]<stderr>:[rank6]:[W CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+[1,1]<stderr>:[rank1]:[W CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+[1,2]<stderr>:[rank2]:[W CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+[1,3]<stderr>:[rank3]:[W CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+[1,0]<stderr>:[rank0]: Traceback (most recent call last):
+[1,0]<stderr>:[rank0]:   File "/home/ubuntu/src/vllm-test/lmi_dist/benchmark_speculate.py", line 284, in <module>
+[1,0]<stderr>:[rank0]:     main(cmd_args)
+[1,0]<stderr>:[rank0]:   File "/home/ubuntu/src/vllm-test/lmi_dist/benchmark_speculate.py", line 278, in main
+[1,0]<stderr>:[rank0]:     results = evaluate_functional_correctness("tmp.jsonl")
+[1,0]<stderr>:[rank0]:   File "/home/ubuntu/src/vllm-test/lmi_dist/human_eval/evaluation.py", line 71, in evaluate_functional_correctness
+[1,0]<stderr>:[rank0]:     assert len(completion_id) == len(problems), "Some problems are not attempted."
+[1,0]<stderr>:[rank0]: AssertionError: Some problems are not attempted.
+[1,0]<stderr>:[rank0]:[W CudaIPCTypes.cpp:16] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[12246,1],0]
+  Exit code:    1
+--------------------------------------------------------------------------

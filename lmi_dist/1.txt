@@ -1,0 +1,27 @@
+[ip-172-31-38-7:229854] Warning: could not find environment variable "PYTHONPATH"
+[1,0]<stdout>:INFO 08-30 23:20:50 arg_utils.py:76] Found draft_model parameter: /home/ubuntu/models/TinyLlama-1.1B-Chat-v1.0, will apply speculative patch
+[1,0]<stdout>:WARNING 08-30 23:20:50 arg_utils.py:128] The draft model's max context length (2048) is not equals target model (4096), the max context length is now set to 2048.
+[1,0]<stdout>:INFO 08-30 23:20:50 vllm_engine.py:201] Using speculative decoding for LLM engine: draft_model='/home/ubuntu/models/TinyLlama-1.1B-Chat-v1.0', speculate_length=5, draft_model_tp_size=1, quantization=None
+[1,0]<stdout>:INFO 08-30 23:20:50 selector.py:16] Using FlashAttention backend.
+[1,0]<stdout>:INFO 08-30 23:20:58 model_runner.py:104] Loading model weights took 24.2840 GB
+[1,0]<stdout>:INFO 08-30 23:20:58 model_runner.py:81] Loading draft model weights took 2.0512 GB
+[1,0]<stdout>:INFO 08-30 23:20:59 vllm_engine.py:208] # GPU blocks: 2899, # CPU blocks: 318
+[1,0]<stdout>:INFO 08-30 23:21:01 model_runner.py:111] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,0]<stdout>:INFO 08-30 23:21:01 model_runner.py:115] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,0]<stdout>:INFO 08-30 23:21:11 model_runner.py:221] Graph capturing finished in 9 secs.
+[1,0]<stdout>:batch_0 throutput=94.22819353119047 tokens/sec
+[1,0]<stdout>:batch_1 throutput=96.61358525993855 tokens/sec
+[1,0]<stdout>:batch_2 throutput=101.42063838014484 tokens/sec
+[1,0]<stdout>:batch_3 throutput=91.23830433939759 tokens/sec
+[1,0]<stdout>:batch_4 throutput=86.92515553714368 tokens/sec
+[1,0]<stdout>:batch_5 throutput=87.275248549509 tokens/sec
+[1,0]<stdout>:batch_6 throutput=83.80564144115647 tokens/sec
+[1,0]<stdout>:batch_7 throutput=88.1356506441191 tokens/sec
+[1,0]<stdout>:batch_8 throutput=95.62682379100555 tokens/sec
+[1,0]<stdout>:batch_9 throutput=106.67022967032405 tokens/sec
+[1,0]<stdout>:Finished in 24.13495788400178 seconds
+[1,0]<stdout>:Mean avg prompt length = 49.1
+[1,0]<stdout>:Mean avg response length = 223.0
+[1,0]<stdout>:Throughput = 92.39709514795504 tokens/s
+[1,0]<stdout>:Avg accepted = 2.1554664101519525
+[1,0]<stderr>:[rank0]:[W830 23:21:35.380968442 ProcessGroupNCCL.cpp:1168] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())

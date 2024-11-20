@@ -1,0 +1,22 @@
+[ip-172-31-38-7:230633] Warning: could not find environment variable "PYTHONPATH"
+[1,0]<stdout>:INFO 08-30 23:21:41 selector.py:16] Using FlashAttention backend.
+[1,0]<stdout>:INFO 08-30 23:21:49 model_runner.py:104] Loading model weights took 24.2840 GB
+[1,0]<stdout>:INFO 08-30 23:21:50 vllm_engine.py:208] # GPU blocks: 2815, # CPU blocks: 327
+[1,0]<stdout>:INFO 08-30 23:21:52 model_runner.py:791] Capturing the model for CUDA graphs. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+[1,0]<stdout>:INFO 08-30 23:21:52 model_runner.py:795] CUDA graphs can take additional 1~3 GiB memory per GPU. If you are running out of memory, consider decreasing `gpu_memory_utilization` or enforcing eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+[1,0]<stdout>:INFO 08-30 23:21:56 model_runner.py:867] Graph capturing finished in 4 secs.
+[1,0]<stdout>:batch_0 throutput=50.869772715094875 tokens/sec
+[1,0]<stdout>:batch_1 throutput=50.798171155467315 tokens/sec
+[1,0]<stdout>:batch_2 throutput=50.77177155513345 tokens/sec
+[1,0]<stdout>:batch_3 throutput=50.81244813270083 tokens/sec
+[1,0]<stdout>:batch_4 throutput=51.12155420616195 tokens/sec
+[1,0]<stdout>:batch_5 throutput=50.923551813888615 tokens/sec
+[1,0]<stdout>:batch_6 throutput=50.879329130826385 tokens/sec
+[1,0]<stdout>:batch_7 throutput=51.002041955280276 tokens/sec
+[1,0]<stdout>:batch_8 throutput=50.81863904436345 tokens/sec
+[1,0]<stdout>:batch_9 throutput=50.74503044491864 tokens/sec
+[1,0]<stdout>:Finished in 43.83956262699212 seconds
+[1,0]<stdout>:Mean avg prompt length = 49.1
+[1,0]<stdout>:Mean avg response length = 223.0
+[1,0]<stdout>:Throughput = 50.867295802512956 tokens/s
+[1,0]<stderr>:[rank0]:[W830 23:22:40.969930939 ProcessGroupNCCL.cpp:1168] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())

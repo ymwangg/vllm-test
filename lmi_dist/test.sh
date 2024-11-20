@@ -1,18 +1,18 @@
-tp=8
-draft_tp=8
+tp=1
+draft_tp=1
 bs=64
 max_tokens=256
 max_steps=10
 gpu_util=0.8
 
 dataset=../dataset/humaneval.jsonl
-target=/home/ubuntu/models/Llama-3.1-70B-Instruct
-draft=/home/ubuntu/models/Llama-3.1-8B-Instruct
+target=/home/ubuntu/models/Mistral-7B-v0.1
+draft=/home/ubuntu/models/Mistral-160M
 
 MPIRUN="mpirun --allow-run-as-root --bind-to none --mca btl_vader_single_copy_mechanism none --tag-output -x FI_PROVIDER=efa -x RDMAV_FORK_SAFE=1 -x FI_EFA_USE_DEVICE_RDMA=1 -x LD_LIBRARY_PATH -x PYTHONPATH -x MKL_DYNAMIC=FALSE"
 
 CMD="$MPIRUN -n $tp python  benchmark_speculate.py --tp-size $tp --model $target --draft-model $draft --batch-size $bs --dataset $dataset --max-steps $max_steps  --max-tokens $max_tokens --draft-tp-size $draft_tp  --gpu-memory-utilization $gpu_util"
 
-$CMD --use-speculate --speculate-length 5 --run-profile --run-human-eval --enable-bonus-token
+$CMD --use-speculate --speculate-length 5 --run-profile --run-human-eval
 
-$CMD --run-profile --run-human-eval
+#$CMD --run-profile

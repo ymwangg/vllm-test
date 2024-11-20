@@ -192,7 +192,6 @@ def main(args: BenchmarkConfig):
             "draft_model": args.draft_model,
             "speculate_length": args.speculate_length,
             "draft_model_tp_size": args.draft_tp_size,
-            "speculate_enable_bonus_token": args.enable_bonus_token,
         })
 
     llm = LmiDistLLM(**engine_kwargs)
